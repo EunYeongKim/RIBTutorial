@@ -31,7 +31,9 @@ protocol RootListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
 }
 
-final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteractable, RootPresentableListener {
+final class RootInteractor: PresentableInteractor<RootPresentable>,
+                            RootInteractable,
+                            RootPresentableListener {
     weak var router: RootRouting?
 
     weak var listener: RootListener?

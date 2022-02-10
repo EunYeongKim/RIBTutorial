@@ -42,7 +42,17 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    public func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        urlHandler?.handle(url)
+        return true
+    }
+    
     // MARK: - Private
 
     private var launchRouter: LaunchRouting?
+    private var urlHandler: UrlHandler?
+}
+
+protocol UrlHandler: class {
+    func handle(_ url: URL)
 }

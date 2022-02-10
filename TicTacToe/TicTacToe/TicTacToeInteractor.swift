@@ -149,11 +149,6 @@ final class TicTacToeInteractor: PresentableInteractor<TicTacToePresentable>, Ti
     }
 }
 
-enum PlayerType: Int {
-    case player1 = 1
-    case player2
-}
-
 struct GameConstants {
     static let rowCount = 3
     static let colCount = 3
