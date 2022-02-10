@@ -28,7 +28,7 @@ protocol TicTacToePresentable: Presentable {
 }
 
 protocol TicTacToeListener: AnyObject {
-	func gameDidEnd(withWinner winner: PlayerType?)
+	func gameDidEnd(with winner: PlayerType?)
 }
 
 final class TicTacToeInteractor: PresentableInteractor<TicTacToePresentable>, TicTacToeInteractable, TicTacToePresentableListener {
@@ -68,7 +68,7 @@ final class TicTacToeInteractor: PresentableInteractor<TicTacToePresentable>, Ti
 
         if let winner = checkWinner() {
 			presenter.announce(winner: winner) {
-				self.listener?.gameDidEnd(withWinner: winner)
+				self.listener?.gameDidEnd(with: winner)
 			}
         }
     }

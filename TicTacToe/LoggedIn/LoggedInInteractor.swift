@@ -20,7 +20,9 @@ protocol LoggedInListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
 }
 
-final class LoggedInInteractor: Interactor, LoggedInInteractable {
+final class LoggedInInteractor: Interactor,
+                                LoggedInInteractable,
+                                LoggedInActionableItem {
 
     weak var router: LoggedInRouting?
     weak var listener: LoggedInListener?
@@ -50,11 +52,19 @@ final class LoggedInInteractor: Interactor, LoggedInInteractable {
 		router?.routeToTicTacToe()
 	}
 
-//	// MARK: - TicTacToeListener
-	func gameDidEnd(withWinner winner: PlayerType?) {
+// MARK: - TicTacToeListener
+	func gameDidEnd(with winner: PlayerType?) {
 		if let winner = winner {
             mutableScoreStream.updateScore(with: winner)
 		}
 		router?.routeToOffGame()
 	}
+}
+
+// MARK: - LoginActionableItem
+
+extension LoggedInInteractor {
+    func launchGame(with id: String?) -> Observable<(LoggedInActionableItem, ())> {
+        return Observable.just((self, ()))
+    }
 }

@@ -61,7 +61,7 @@ final class LoggedInComponent: Component<LoggedInDependency>, OffGameDependency,
 protocol LoggedInBuildable: Buildable {
     func build(withListener listener: LoggedInListener,
 			   player1Name: String,
-			   player2Name: String) -> LoggedInRouting
+               player2Name: String) -> (router: LoggedInRouting, actionableItem: LoggedInActionableItem)
 }
 
 final class LoggedInBuilder: Builder<LoggedInDependency>, LoggedInBuildable {
@@ -72,7 +72,7 @@ final class LoggedInBuilder: Builder<LoggedInDependency>, LoggedInBuildable {
 
     func build(withListener listener: LoggedInListener,
 			   player1Name: String,
-			   player2Name: String) -> LoggedInRouting {
+			   player2Name: String) -> (router: LoggedInRouting, actionableItem: LoggedInActionableItem) {
 
 		// LoggedInDependency의 구현체인 component에 넘겨줘야함
         let component = LoggedInComponent(dependency: dependency,
@@ -84,9 +84,10 @@ final class LoggedInBuilder: Builder<LoggedInDependency>, LoggedInBuildable {
 		let offGameBuilder = OffGameBuilder(dependency: component)
 		let tictactoeBuilder = TicTacToeBuilder(dependency: component)
 
-		return LoggedInRouter(interactor: interactor,
+		let router = LoggedInRouter(interactor: interactor,
 							  viewController: component.loggedInViewController,
 							  offGameBuilder: offGameBuilder,
 							  tictactoeBuilder: tictactoeBuilder)
+        return (router, interactor)
     }
 }

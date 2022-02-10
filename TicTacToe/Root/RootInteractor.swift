@@ -19,7 +19,7 @@ import RxSwift
 
 protocol RootRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
-	func routeToLoggedIn(withPlayer1Name player1Name: String, player2Name: String)
+	func routeToLoggedIn(withPlayer1Name player1Name: String, player2Name: String) -> LoggedInActionableItem
 }
 
 protocol RootPresentable: Presentable {
@@ -39,6 +39,8 @@ final class RootInteractor: PresentableInteractor<RootPresentable>,
     weak var router: RootRouting?
 
     weak var listener: RootListener?
+    
+    private let loggedInActionableItemSubject = ReplaySubject<LoggedInActionableItem>.create(bufferSize: 1)
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -59,10 +61,27 @@ final class RootInteractor: PresentableInteractor<RootPresentable>,
 
 	// MARK: - LoggedOutListener
 	func didLogin(withPlayer1Name player1Name: String, player2Name: String) {
-		router?.routeToLoggedIn(withPlayer1Name: player1Name, player2Name: player2Name)
+		let loggedInActionableItem = router?.routeToLoggedIn(withPlayer1Name: player1Name, player2Name: player2Name)
+        
+        if let loggedInActionableItem = loggedInActionableItem {
+            loggedInActionableItemSubject.onNext(loggedInActionableItem)
+        }
 	}
 
 }
+
+// MARK: - RootActionableItem
+
+extension RootInteractor {
+    func waitForLogin() -> Observable<(LoggedInActionableItem, ())> {
+        return loggedInActionableItemSubject
+            .map { (loggedInItem: LoggedInActionableItem) -> (LoggedInActionableItem, ()) in
+                (loggedInItem, ())
+            }
+    }
+}
+
+// MARK: - UrlHandler
 
 extension RootInteractor {
     func handle(_ url: URL) {
