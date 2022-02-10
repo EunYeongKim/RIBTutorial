@@ -17,8 +17,7 @@ protocol LoggedInViewControllable: ViewControllable {
     // TODO: Declare methods the router invokes to manipulate the view hierarchy. Since
     // this RIB does not own its own view, this protocol is conformed to by one of this
     // RIB's ancestor RIBs' view.
-	func present(viewController: ViewControllable)
-	func dismiss(viewController: ViewControllable)
+    func replaceModal(viewController: ViewControllable?)
 }
 
 final class LoggedInRouter: Router<LoggedInInteractable>, LoggedInRouting {
@@ -43,9 +42,9 @@ final class LoggedInRouter: Router<LoggedInInteractable>, LoggedInRouting {
     func cleanupViews() {
         // TODO: Since this router does not own its view, it needs to cleanup the views
         // it may have added to the view hierarchy, when its interactor is deactivated.
-		if let currentChild = currentChild {
-			viewController.dismiss(viewController: currentChild.viewControllable)
-		}
+        if currentChild != nil {
+            viewController.replaceModal(viewController: nil)
+        }
     }
 
 	// MARK: - LoggedInRouting
@@ -55,7 +54,7 @@ final class LoggedInRouter: Router<LoggedInInteractable>, LoggedInRouting {
 		let tictactoe = tictactoeBuilder.build(withListener: interactor)
 		self.currentChild = tictactoe
 		attachChild(tictactoe)
-		viewController.present(viewController: tictactoe.viewControllable)
+        viewController.replaceModal(viewController: tictactoe.viewControllable)
 	}
 
 	func routeToOffGame() {
@@ -74,13 +73,13 @@ final class LoggedInRouter: Router<LoggedInInteractable>, LoggedInRouting {
 		let offGame = offGameBuilder.build(withListener: interactor)
 		self.currentChild = offGame
 		attachChild(offGame)
-		viewController.present(viewController: offGame.viewControllable)
+        viewController.replaceModal(viewController: offGame.viewControllable)
 	}
 
 	private func detachCurrentChild() {
 		if let currentChild = currentChild {
 			detachChild(currentChild)
-			viewController.dismiss(viewController: currentChild.viewControllable)
+			viewController.replaceModal(viewController: nil)
 			self.currentChild = nil
 		}
 	}

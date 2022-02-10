@@ -65,6 +65,9 @@ final class LoggedInInteractor: Interactor,
 
 extension LoggedInInteractor {
     func launchGame(with id: String?) -> Observable<(LoggedInActionableItem, ())> {
+        
+        router?.routeToTicTacToe()
+        
         return Observable.just((self, ()))
     }
 }

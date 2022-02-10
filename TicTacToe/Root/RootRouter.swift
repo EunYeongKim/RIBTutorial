@@ -22,8 +22,7 @@ protocol RootInteractable: Interactable, LoggedOutListener, LoggedInListener {
 }
 
 protocol RootViewControllable: ViewControllable {
-    func present(viewController: ViewControllable)
-	func dismiss(viewController: ViewControllable)
+    func replaceModal(viewController: ViewControllable?)
 }
 
 final class RootRouter: LaunchRouter<RootInteractable, RootViewControllable>, RootRouting {
@@ -44,7 +43,7 @@ final class RootRouter: LaunchRouter<RootInteractable, RootViewControllable>, Ro
         let loggedOut = loggedOutBuilder.build(withListener: interactor)
         self.loggedOut = loggedOut
         attachChild(loggedOut)
-        viewController.present(viewController: loggedOut.viewControllable)
+        viewController.replaceModal(viewController: loggedOut.viewControllable)
     }
 
 	// MARK: - RootRouting
@@ -56,7 +55,7 @@ final class RootRouter: LaunchRouter<RootInteractable, RootViewControllable>, Ro
 		// LoggedIn Builder 호출
 		if let loggedOut = loggedOut {
 			detachChild(loggedOut)
-			viewController.dismiss(viewController: loggedOut.viewControllable)
+            viewController.replaceModal(viewController: nil)
 			self.loggedOut = nil
 		}
 
