@@ -29,7 +29,7 @@ class LoggedInBuildableMock: LoggedInBuildable {
 
 	init() { }
 
-	func build(withListener listener: LoggedInListener) -> LoggedInRouting {
+	func build(withListener listener: LoggedInListener, player1Name: String, player2Name: String) -> LoggedInRouting {
 		buildCallCount += 1
 		if let buildHandler = buildHandler {
 			return buildHandler(listener)
@@ -85,7 +85,7 @@ class LoggedInInteractableMock: LoggedInInteractable {
 		}
 	}
 
-	func gameDidEnd() {
+	func gameDidEnd(withWinner winner: PlayerType?) {
 		gameDidEndCallCount += 1
 		if let gameDidEndHandler = gameDidEndHandler {
 			return gameDidEndHandler()

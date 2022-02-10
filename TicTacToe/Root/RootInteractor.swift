@@ -33,7 +33,9 @@ protocol RootListener: AnyObject {
 
 final class RootInteractor: PresentableInteractor<RootPresentable>,
                             RootInteractable,
-                            RootPresentableListener {
+                            RootPresentableListener,
+                            RootActionableItem,
+                            UrlHandler {
     weak var router: RootRouting?
 
     weak var listener: RootListener?
@@ -60,4 +62,13 @@ final class RootInteractor: PresentableInteractor<RootPresentable>,
 		router?.routeToLoggedIn(withPlayer1Name: player1Name, player2Name: player2Name)
 	}
 
+}
+
+extension RootInteractor {
+    func handle(_ url: URL) {
+        let launchGameWorkflow = LaunchGameWorkflow(url: url)
+        launchGameWorkflow
+            .subscribe(self)
+            .disposeOnDeactivate(interactor: self)
+    }
 }
